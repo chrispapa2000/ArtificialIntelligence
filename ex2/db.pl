@@ -1,12 +1,13 @@
-find_sim_1(X, Y):- genre(X, G1), genre(Y, G1), X \= Y.
+% find_sim_1(X, Y):- genre(X, G1), genre(Y, G1), X \= Y.
 
-find_sim_2(X, Y):-
-    genre(X,A),
-    genre(Y,A),
-    genre(X,B),
-    genre(Y,B), 
-    X\=Y, A\=B.
+% find_sim_2(X, Y):-
+%     genre(X,A),
+%     genre(Y,A),
+%     genre(X,B),
+%     genre(Y,B), 
+%     X\=Y, A\=B.
 
+/*PART 1*/
 /*comparing genres*/
 
 common_genre(X,Y,G):- genre(X,G), genre(Y,G), X\=Y.
@@ -19,11 +20,11 @@ find_genre_sim(X,Y,L):-
 
 strongly_common_subject(X,Y,L):-
     find_genre_sim(X,Y,L),
-    @>=(L,5).
+    @>=(L,4).
 
 common_subject(X,Y,L):-
     find_genre_sim(X,Y,L),
-    @>=(L,3).
+    @>=(L,2).
 
 weakly_common_subject(X,Y,L):-
     find_genre_sim(X,Y,L),
@@ -40,7 +41,7 @@ find_plot_sim(X,Y,L):-
 
 identical_plot(X,Y,S):-
     find_plot_sim(X,Y,S),
-    @>=(S,3).
+    @>=(S,2).
 
 similar_plot(X,Y,S):-
     find_plot_sim(X,Y,S),
@@ -95,11 +96,6 @@ common_company(X,S):-
     !.
 
 /*comparing countries*/
-% find_common_country(X,Y,C):-
-%     production_country(X,C),
-%     production_country(Y,C),
-%     X \= Y.
-
 common_country_N(_,_,[],0):-!.
 
 common_country_N(X,Y,[A|Tail],N):-
@@ -131,8 +127,43 @@ same_dacade(X,S):-
     !.
 
 
+/*PART 2*/
+find_sim_1(X,Y):-
+    weakly_common_subject(X,Y,_),
+    find_same_decade(X,Y,_,_).
 
+find_sim_2(X,Y):-
+    common_subject(X,Y,_),
+    similar_plot(X,Y,_).
 
+find_sim_3(X,Y):-
+    common_subject(X,Y,_),
+    similar_plot(X,Y,_),
+    common_country_N(X,Y,_,1),
+    find_same_decade(X,Y,_,_).
+
+find_sim_4(X,Y):-
+    common_actor_N(X,Y,_,1).
+
+% find_sim_5(X,Y):-
+%     % similar_plot(X,Y,_),
+%     common_country_N(X,Y,_,1),
+%     common_language_N(X,Y,_,1),
+%     common_director(X,Y).
+
+find_sim_5(X,Y):-
+    common_country_N(X,Y,_,1),
+    common_language_N(X,Y,_,1),
+    common_actor_N(X,Y,_,2).
+
+find_sim_5(X,Y):-
+    common_country_N(X,Y,_,1),
+    common_language_N(X,Y,_,1),
+    common_director(X,Y).
+
+% find_sim_5(X,Y):-
+%     identical_plot(X,Y,_),
+%     strongly_common_subject(X,Y,_).
 
 
 
